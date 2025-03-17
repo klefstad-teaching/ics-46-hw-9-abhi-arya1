@@ -26,7 +26,7 @@ bool diff_size_comp(const string &str1, const string &str2, int d, size_t size1,
     string short_str; 
     string long_str; 
 
-    if(size1, size2) {
+    if(size1 < size2) {
         short_str = str1; 
         long_str = str2; 
     } else {
@@ -45,7 +45,7 @@ bool diff_size_comp(const string &str1, const string &str2, int d, size_t size1,
         }
     }
 
-    diffs += long_str.size() - idx1; 
+    diffs += long_str.size() - idx2; 
     if(diffs > d) return false; 
     return true; 
 }
