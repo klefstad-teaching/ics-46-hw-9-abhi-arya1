@@ -8,19 +8,9 @@ void error(string word1, string word2, string msg) {
     cout << "ERROR - " << word1 <<  " " << word2 << " " << msg; 
 }
 
-
-bool edit_distance_within(const std::string& str1, const std::string& str2, int d) {
-    if(str1 == str2) {
-        return true; 
-    }
-
-    if (abs((int) (str1.size() - str2.size())) > d) {
-        return false; 
-    }
-
-    int min_size = min(str1.size(), str2.size());
+bool same_size_comp(const string &str1, const string &str2, int d, size_t strsize) {
     int diffs { 0 };
-    for(int idx = 0; idx < min_size; ++idx) {
+    for(size_t idx = 0; idx < strsize; ++idx) {
         if(str1[idx] != str2[idx]) {
             ++diffs;
             if(diffs > d) {
@@ -28,8 +18,53 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
             }
         }
     }
-
     return true; 
+}
+
+bool diff_size_comp(const string &str1, const string &str2, int d, size_t size1, size_t size2) {
+    int diffs { 0 };
+    string short_str; 
+    string long_str; 
+
+    if(size1, size2) {
+        short_str = str1; 
+        long_str = str2; 
+    } else {
+        short_str = str2; 
+        long_str = str1; 
+    } 
+    
+    int idx1 { 0 }, idx2 { 0 };
+    while(idx1 < short_str.size() && idx2 < long_str.size()) {
+        if(short_str[idx1] != long_str[idx2]) {
+            ++diffs; ++idx2; 
+            if(diffs > d)
+                return false; 
+        } else {
+            ++idx1; ++idx2; 
+        }
+    }
+
+    diffs += long_str.size() - idx1; 
+    if(diffs > d) return false; 
+    return true; 
+}
+
+bool edit_distance_within(const std::string& str1, const std::string& str2, int d) {
+    size_t size1 { str1.size() }, size2 { str2.size() };
+    if(str1 == str2)
+        return true; 
+    
+    if(size1 == 0 || size2 == 0)
+        return !(max(size1, size2) > d);
+
+    if (abs((int) (size1 - size2)) > d)
+        return false; 
+
+    if(size1 == size2)
+        return same_size_comp(str1, str2, d, size1);
+
+    return diff_size_comp(str1, str2, d, size1, size2);
 }
 
 
@@ -67,7 +102,7 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
         }
     }
     
-    error(begin_word, end_word, "No word ladder exists between these words.");
+    error(begin_word, end_word, "no ladder found here");
     return empty;
 }
 
